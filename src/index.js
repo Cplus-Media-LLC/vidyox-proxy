@@ -1,8 +1,5 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import fetch from 'node-fetch';
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const targetUrl = req.query.url as string;
+export default async function handler(req, res) {
+  const targetUrl = req.query.url;
 
   if (!targetUrl) {
     return res.status(400).json({ error: 'Missing URL parameter' });
@@ -30,7 +27,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const arrayBuffer = await response.arrayBuffer();
     res.send(Buffer.from(arrayBuffer));
-  } catch (err: any) {
+  } catch (err) {
+    console.error('Proxy error:', err);
     res.status(500).json({ error: 'Proxy error', details: err.message });
   }
 }
